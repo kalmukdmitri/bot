@@ -60,24 +60,6 @@ def modify_log(old_log, new_log):
     return pd.DataFrame(old_log).transpose()
 
 
-def query_df(qry):
-    devDB  = {
-        'host' :"185.180.163.10",
-        'user' : "dima_statist",
-        'passwd' : "YandexGoogle",
-        'database' : "workface.ru"
-    }
-
-    cnx = mysql.connect(**devDB)
-    cursor = cnx.cursor()
-    cursor.execute(qry)
-    resula = [i for i in cursor]
-    field_names = [i[0] for i in cursor.description]
-    cursor.close()
-    cnx.close()
-    db_data_df = pd.DataFrame(resula,
-                           columns = field_names)
-    return db_data_df
 
 def query_df(qry, token):
     devDB  = token
@@ -152,7 +134,7 @@ def wf_reg_bot():
     FROM `users`
     WHERE create_date > {date1_s}
     and create_date < {date2_s}'''
-    new_regs  = query_df(query_compaines)
+    new_regs  = query_df(query_compaines,token['wf_base'])
     nul_phones = []
     good_phones  =[]
     for i in new_regs.itertuples():
