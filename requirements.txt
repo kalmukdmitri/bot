@@ -1,0 +1,7 @@
+requests
+pandas
+mysql-connector-python
+gspread
+oauth2client
+google-auth-oauthlib
+google-api-python-client
