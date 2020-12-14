@@ -7,7 +7,8 @@ from doc_token import get_tokens
 import mysql.connector as mysql
 from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
-token = get_tokens()
+
+all_token = get_tokens()
 
 SCOPES = ['https://www.googleapis.com/auth/analytics.readonly',
              'https://spreadsheets.google.com/feeds',
@@ -90,7 +91,7 @@ def table_g_updater():
     FROM `users`
     WHERE create_date > {date1_s}
     and create_date < {date2_s}'''
-    new_regs  = query_df(query_compaines,token['wf_base'])
+    new_regs  = query_df(query_compaines,all_token['wf_base'])
     log_file = [['Телефон'],['Статус'],['Дата']]
     for i in new_regs.itertuples():
         log_file[0].append(i.phone)
@@ -134,7 +135,7 @@ def wf_reg_bot():
     FROM `users`
     WHERE create_date > {date1_s}
     and create_date < {date2_s}'''
-    new_regs  = query_df(query_compaines,token['wf_base'])
+    new_regs  = query_df(query_compaines,all_token['wf_base'])
     nul_phones = []
     good_phones  =[]
     for i in new_regs.itertuples():
@@ -155,10 +156,10 @@ def wf_reg_bot():
             mess+= i+'\n'
 #     chats = [247391252, 482876050]            
     chats = [247391252]
-    token = "1416074989:AAECtHYON681siUb5S1bzuMHKnLUI-qnb9M"
+    token_local = "1416074989:AAECtHYON681siUb5S1bzuMHKnLUI-qnb9M"
     method = "sendMessage"
     
-    url = "https://api.telegram.org/bot{token}/{method}".format(token=token, method=method)
+    url = "https://api.telegram.org/bot{token}/{method}".format(token=token_local, method=method)
     for i in chats:
         data = {"chat_id": i, "text": mess}
         requests.post(url, data=data)
@@ -273,8 +274,7 @@ class get_AMO:
         return res
         
 def call_hole():
-    passwords = get_tokens()
-    callibri_connect = callibri(token= passwords['callibri'])
+    callibri_connect = callibri(token = all_token['callibri'])
     date2 = datetime.datetime.today().date()  - datetime.timedelta(days=1)
     date1  = date2 - datetime.timedelta(days=5)
     callibri_data = callibri_connect.get_stats(date1, date2)
